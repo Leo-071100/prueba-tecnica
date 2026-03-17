@@ -71,3 +71,13 @@ Para ejecutar el proyecto localmente:
    ```bash
    npx expo start
    ```
+
+## Retos Técnicos y Soluciones
+
+Durante la configuración inicial del proyecto, se presentaron los siguientes incidentes que fueron resueltos exitosamente:
+
+### 1. Error de Sintaxis en el Bundler (Unexpected keyword 'const')
+
+Al intentar ejecutar el proyecto con **Node v22**, surgió un error de compilación en las dependencias de `react-native` relacionado con los modificadores de tipos en TypeScript.
+
+- **Solución:** Se realizó una limpieza profunda de `node_modules` y se eliminó el `package-lock.json` y sel limpió la caché de npm para volver a instalar las dependencias y por último se ejecutó `npx expo start -c` para borrar el caché de Metro y forzar una re-compilación limpia compatible con el entorno actual.
