@@ -3,6 +3,7 @@
 Este repositorio contiene una app base para evaluar habilidades de mantenimiento y desarrollo evolutivo en React Native.
 
 ## Stack base
+
 - Expo
 - React Native
 - TypeScript
@@ -10,9 +11,11 @@ Este repositorio contiene una app base para evaluar habilidades de mantenimiento
 - React Navigation
 
 ## Objetivo
+
 Trabajar sobre una app existente para completar funcionalidades, corregir errores y documentar la solución.
 
 ## Requerimientos
+
 1. Consumir correctamente los datos y mostrar el listado.
 2. Implementar manejo de `loading`, `error`, `empty state` y `pull to refresh`.
 3. Mantener el estado global con Redux Toolkit o equivalente.
@@ -30,17 +33,41 @@ Trabajar sobre una app existente para completar funcionalidades, corregir errore
    - qué harías diferente para producción.
 
 ## Pistas
+
 La app incluye intencionalmente algunos problemas para revisar el criterio técnico del candidato.
 
 ## Entregables esperados
+
 - Repositorio con la solución.
 - Commits claros.
 - README actualizado.
 
 ## Criterios de evaluación
+
 - Calidad y claridad del código.
 - Manejo de asincronía y estado.
 - Resolución de bugs.
 - UX básica móvil.
 - Organización del repositorio.
 - Capacidad para explicar decisiones técnicas.
+
+## Cómo ejecutar el proyecto
+
+Instalaciones necesarias:
+
+- **Node.js**: v20 o v22 (LTS recomendada).
+- **npm** o **yarn** o algún otro instalador de paquetes.
+- **Aplicación Expo Go**: Ya sea instalada en un dispositivo físico o emulador.
+
+Para ejecutar el proyecto localmente:
+
+1. **Instalar dependencias:**
+
+   ```bash
+   npm install
+   ```
+
+1. **Iniciar el servidor de desarrollo:**
+   ```bash
+   npx expo start
+   ```
