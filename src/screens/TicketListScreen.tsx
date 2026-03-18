@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FilterBar } from '../components/FilterBar';
@@ -6,27 +6,26 @@ import { TicketCard } from '../components/TicketCard';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { loadTickets, setSelectedStatus } from '../store/ticketsSlice';
-
-const ListFeedback = ({ error }: { error: string | null }) => {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.error}>{error ? error : 'No hay tickets para mostrar'}</Text>
-      </View>
-    )
-  }
+import { SearchBar } from '@/components/SearchBar';
 
 export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStackParamList, 'TicketList'>) {
   const dispatch = useAppDispatch();
   const { items, loading, error, selectedStatus } = useAppSelector((state) => state.tickets);
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     dispatch(loadTickets());
   }, [dispatch]);
 
   const filteredItems = useMemo(() => {
-    if (selectedStatus === 'all') return items;
-    return items.filter((item) => item.status === selectedStatus);
-  }, [items, selectedStatus]);
+    return items.filter((item) => {
+      const matchesStatus = selectedStatus === 'all' || item.status === selectedStatus;
+      const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+
+      return matchesStatus && matchesSearch
+    });
+  }, [items, selectedStatus, searchQuery]);
 
   const renderItem = ({ item }: { item: typeof items[0] }) => (
     <TicketCard
@@ -47,6 +46,8 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.subtitle}>Prueba técnica React Native</Text>
+      
+      <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
       <FilterBar
         value={selectedStatus}
@@ -58,7 +59,11 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
         data={filteredItems}
         keyExtractor={(item, index) => item.id.toString()}
         renderItem={({ item }) => renderItem({ item })}
-        ListEmptyComponent={<ListFeedback error={error} />}
+        ListEmptyComponent={() => (
+          <View style={styles.centered}>
+            <Text style={styles.error}>{error ? error : 'No hay tickets para mostrar'}</Text>
+          </View>
+        )}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={() => dispatch(loadTickets())} />
         }
