@@ -21,7 +21,7 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       const matchesStatus = selectedStatus === 'all' || item.status === selectedStatus;
-      const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+      const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesStatus && matchesSearch
     });
