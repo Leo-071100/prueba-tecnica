@@ -47,8 +47,8 @@ export async function updateTicketStatus(id: number, status: TicketStatus): Prom
   if (!ticket) {
     throw new Error('Ticket no encontrado');
   }
-  ticket.status = status;
-  return { ...ticket };
+  
+  return { ...ticket, status };
 }
 
 function wait(ms: number) {
