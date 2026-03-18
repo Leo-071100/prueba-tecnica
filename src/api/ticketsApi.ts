@@ -38,7 +38,7 @@ const MOCK_TICKETS: Ticket[] = [
 export async function fetchTickets(): Promise<Ticket[]> {
   await wait(900);
 
-  return [...MOCK_TICKETS, ...MOCK_TICKETS.slice(0, 1)];
+  return [...MOCK_TICKETS];
 }
 
 export async function updateTicketStatus(id: number, status: TicketStatus): Promise<Ticket> {
