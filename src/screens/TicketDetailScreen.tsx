@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
-import { Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changeTicketStatus } from '../store/ticketsSlice';
 
-export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackParamList, 'TicketDetail'>) {
+export function TicketDetailScreen({ route, navigation }: NativeStackScreenProps<RootStackParamList, 'TicketDetail'>) {
   const dispatch = useAppDispatch();
   const ticketId = route.params.ticketId;
   const tickets = useAppSelector((state) => state.tickets.items);
+  const isUpdating = useAppSelector((state) => state.tickets.isUptading)
 
   const ticket = useMemo(() => tickets.find((item) => item.id === ticketId), [tickets, ticketId]);
 
@@ -20,10 +21,19 @@ export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackPa
     );
   }
 
+   if (isUpdating) {
+      return (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" />
+          <Text style={styles.feedback}>Actualizando ticket...</Text>
+        </View>
+      )
+    }
+
   const markAsResolved = async () => {
     try {
       await dispatch(changeTicketStatus({ id: ticket.id, status: 'resolved' })).unwrap();
-      Alert.alert('Éxito', 'El ticket fue actualizado.');
+      Alert.alert('Éxito', 'El ticket fue actualizado.', [{ text: 'OK', onPress: () => navigation.goBack() }]);
     } catch (error) {
       Alert.alert('Error', 'No fue posible actualizar el ticket.');
     }
@@ -45,8 +55,8 @@ export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackPa
         <Text style={styles.label}>Asignado a</Text>
         <Text style={styles.body}>{ticket.assignee}</Text>
 
-        <Pressable style={styles.button} onPress={markAsResolved}>
-          <Text style={styles.buttonText}>Marcar como resuelto</Text>
+        <Pressable style={ticket.status === 'resolved' ? styles.buttonDisabled : styles.button} onPress={markAsResolved} disabled={isUpdating || ticket.status === 'resolved'} >
+          <Text style={styles.buttonText}>{ticket.status === 'resolved' ? 'Ticket resuelto' : 'Marcar como resuelto'}</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -92,8 +102,26 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
+  buttonDisabled: {
+    backgroundColor: '#9ca3af',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 20,
+  },
   buttonText: {
     color: '#fff',
     fontWeight: '700',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  feedback: {
+    marginTop: 10,
+    color: '#4b5563',
+    textAlign: 'center',
   },
 });
