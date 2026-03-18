@@ -42,7 +42,7 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
         <FlatList
           contentContainerStyle={styles.list}
           data={filteredItems}
-          keyExtractor={(item, index) => String(index)}
+          keyExtractor={(item, index) => item.id.toString()}
           renderItem={({ item }) => (
             <TicketCard
               ticket={item}
