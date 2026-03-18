@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FilterBar } from '../components/FilterBar';
@@ -27,12 +27,14 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
     });
   }, [items, selectedStatus, searchQuery]);
 
-  const renderItem = ({ item }: { item: typeof items[0] }) => (
-    <TicketCard
-      ticket={item}
-      onPress={() => navigation.navigate('TicketDetail', { ticketId: item.id })}
-    />
-  );
+  const renderItem = useCallback(({ item }: { item: typeof items[0] }) => {
+    return (
+      <TicketCard
+        ticket={item}
+        onPress={() => navigation.navigate('TicketDetail', { ticketId: item.id })}
+      />
+    );
+  }, []);
   
   if (loading && items.length === 0) {
     return (
@@ -58,7 +60,7 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
         contentContainerStyle={styles.list}
         data={filteredItems}
         keyExtractor={(item, index) => item.id.toString()}
-        renderItem={({ item }) => renderItem({ item })}
+        renderItem={renderItem}
         ListEmptyComponent={() => (
           <View style={styles.centered}>
             <Text style={styles.error}>{error ? error : 'No hay tickets para mostrar'}</Text>
