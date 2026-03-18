@@ -15,6 +15,7 @@ export interface Ticket {
 interface TicketsState {
   items: Ticket[];
   loading: boolean;
+  isUptading: boolean;
   error: string | null;
   selectedStatus: TicketStatus | 'all';
 }
@@ -22,6 +23,7 @@ interface TicketsState {
 const initialState: TicketsState = {
   items: [],
   loading: false,
+  isUptading: false,
   error: null,
   selectedStatus: 'all',
 };
@@ -60,10 +62,18 @@ const ticketsSlice = createSlice({
         state.error = 'No fue posible cargar los tickets';
       })
       .addCase(changeTicketStatus.fulfilled, (state, action) => {
+        state.isUptading = false;
         const index = state.items.findIndex((item) => item.id === action.payload.id);
         if (index >= 0) {
           state.items[index] = action.payload;
         }
+      })
+      .addCase(changeTicketStatus.pending, (state) => {
+        state.isUptading = true;
+      })
+      .addCase(changeTicketStatus.rejected, (state) => {
+        state.error = 'No fue posible actualizar el ticket';
+        state.isUptading = false;
       });
   },
 });
