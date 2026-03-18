@@ -13,7 +13,7 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
 
   useEffect(() => {
     dispatch(loadTickets());
-  }, [dispatch, items.length]);
+  }, [dispatch]);
 
   const filteredItems = useMemo(() => {
     if (selectedStatus === 'all') return items;
