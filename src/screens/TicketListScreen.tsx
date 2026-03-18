@@ -7,6 +7,14 @@ import { RootStackParamList } from '../navigation/RootNavigator';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { loadTickets, setSelectedStatus } from '../store/ticketsSlice';
 
+const ListFeedback = ({ error }: { error: string | null }) => {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.error}>{error ? error : 'No hay tickets para mostrar'}</Text>
+      </View>
+    )
+  }
+
 export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStackParamList, 'TicketList'>) {
   const dispatch = useAppDispatch();
   const { items, loading, error, selectedStatus } = useAppSelector((state) => state.tickets);
@@ -20,6 +28,22 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
     return items.filter((item) => item.status === selectedStatus);
   }, [items, selectedStatus]);
 
+  const renderItem = ({ item }: { item: typeof items[0] }) => (
+    <TicketCard
+      ticket={item}
+      onPress={() => navigation.navigate('TicketDetail', { ticketId: item.id })}
+    />
+  );
+  
+  if (loading && items.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+        <Text style={styles.feedback}>Cargando tickets...</Text>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.subtitle}>Prueba técnica React Native</Text>
@@ -29,32 +53,16 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
         onChange={(value) => dispatch(setSelectedStatus(value))}
       />
 
-      {loading && items.length === 0 ? (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" />
-          <Text style={styles.feedback}>Cargando tickets...</Text>
-        </View>
-      ) : error ? (
-        <View style={styles.centered}>
-          <Text style={styles.error}>{error}</Text>
-        </View>
-      ) : (
-        <FlatList
-          contentContainerStyle={styles.list}
-          data={filteredItems}
-          keyExtractor={(item, index) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TicketCard
-              ticket={item}
-              onPress={() => navigation.navigate('TicketDetail', { ticketId: item.id })}
-            />
-          )}
-          ListEmptyComponent={<Text style={styles.feedback}>No hay tickets para mostrar.</Text>}
-          refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={() => dispatch(loadTickets())} />
-          }
-        />
-      )}
+      <FlatList
+        contentContainerStyle={styles.list}
+        data={filteredItems}
+        keyExtractor={(item, index) => item.id.toString()}
+        renderItem={({ item }) => renderItem({ item })}
+        ListEmptyComponent={<ListFeedback error={error} />}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={() => dispatch(loadTickets())} />
+        }
+      />
     </SafeAreaView>
   );
 }
