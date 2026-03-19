@@ -103,7 +103,7 @@ Al momento de preionar el botón para `Marcar como resuelto` el ticket, no se ac
 
 En el slice de los tickets, agregué los casos `pending` y `reject` para en caso de que ocurra algo inesperado al momento de actualizar el status del ticket y así poder, además, brindarle feedback al usuario
 
-## Mejoras
+## Mejoras realizadas
 
 ### 1. Optimización del listado de tickets
 
@@ -124,4 +124,29 @@ Al marcar como completado un ticket, puede que al usuario le falte un poco de fe
 
 Como mejora funcional, creé una barra de búsqueda en el listado de tickets para que ahora, además de poder filtrar por status, el usuario pueda buscar algún ticket por nombre o alguna palabra clave.
 
-### 5. 
+### 5. Ordenar por importancia
+
+Se agregó un botín al lado de la barra de búsqueda para poder oredener los tickets por prioridad con un flitro simple, siendo `HIGH` el más alto y `LOW` el más bajo.
+
+## Cambios para producción
+
+Bien, para el momento de pasar a proudcción, considero importante implementar cambios como los siguientes: 
+
+- **Centralización de estilos**: Puede que en algunos casos se requiera utilizar estilos globales, esto optmizairía la lectura de código y ahorraría tiempo al momento de maquetar la interfaz de usuario.
+
+- **Tipado centralizado:** Sin duda optaría por hacer archivos específicos para tipos, pues mantendría un orden y evitaría la duplicación, con la centralización es más fáci manejar cambios a nivel global en toda la app.
+
+- **Optimización de la lista:** Si bien hay una parte que se optimizó, aún podría mejorarse, implementaría por ejemplo, el scroll infinito para listas largas, 
+
+- **Implementación de skeleton:** Para dar un poco más de feedback al usuario y que sea más intuitivo, implementaría este tipo de componentes, pues creo que además de mejorar la experiencia de usuario, también le daría un plus a la estética.
+
+- **Almacenar los filtros en local storage:** Esto para que el usuario no pierda las configuraciones para cuando cierre y vuelva a abrir la app se mantenga la lista como la había dejado
+
+- **Agregar más estados para los tickets**: Actualmente solo se puede marcar como terminado, pero sería útil poder elegir entre diferentes `status` para poder tener un mejor control
+
+- **Poder editar los tickets**: Sin duda creo que sería una funcionalidad interesante el hecho de que se pueda editar la información, agregar comentarios, observaciones, además implementar texto enriquedcido y la posibilidad de cargar imágenes le darían un extra muy útil para trabajar con tickets.
+
+- **Mejorar los filtros:** Por ahora nos mantenemos con filtros básicos como filtrar por status, por prioridad, hacer búsquedas... pero también será útil poder filtrar por categoría o asiganción
+
+- **Destacados:** También sería bueno contemplar la opción de agregar una categoría de `Tickets destacados` ya que pueden suceder situaciones en las que el usuario requiera destacar uno o varios de entre todo el listado para poder prestarles más atención o verlos más tarde y no volver a buscar entre la lista completa.
+
