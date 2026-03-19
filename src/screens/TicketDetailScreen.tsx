@@ -8,10 +8,8 @@ import { changeTicketStatus } from '../store/ticketsSlice';
 export function TicketDetailScreen({ route, navigation }: NativeStackScreenProps<RootStackParamList, 'TicketDetail'>) {
   const dispatch = useAppDispatch();
   const ticketId = route.params.ticketId;
-  const tickets = useAppSelector((state) => state.tickets.items);
+  const ticket = useAppSelector((state) => state.tickets.items.find((item) => item.id === ticketId));
   const isUpdating = useAppSelector((state) => state.tickets.isUptading)
-
-  const ticket = useMemo(() => tickets.find((item) => item.id === ticketId), [tickets, ticketId]);
 
   if (!ticket) {
     return (
